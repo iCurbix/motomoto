@@ -32,7 +32,7 @@ def fourbiker(search):
     productslist.extend(fourbiker_products_on_page(soup , search))
 
     for i in range(1 , maxpage):
-        r = requests.get(f"https://sklep4biker.pl/pl/searchquery/{search}/" + str(i := i + 1))
+        r = requests.get(f"https://sklep4biker.pl/pl/searchquery/{search}/{i}")
         soup = BeautifulSoup(r.text, "html.parser")
         productslist.extend(fourbiker_products_on_page(soup, search))
 
