@@ -36,4 +36,4 @@ def fourbiker(search):
         soup = BeautifulSoup(r.text, "html.parser")
         productslist.extend(fourbiker_products_on_page(soup, search))
 
-    return productslist
+    return {'products': productslist}
