@@ -21,13 +21,16 @@ def fourbiker_products_on_page(soup , search):
     return productlist
 
 
-def fourbiker(search):
+async def fourbiker(search):
     productslist = []
 
     i = 1
     r = requests.get(f"https://sklep4biker.pl/pl/searchquery/{search}/{i}")
     soup = BeautifulSoup(r.text, "html.parser")
-    maxpage = ceil(int(soup.select("#box_mainproducts > div.boxhead > .category-name")[0].text.strip().split()[-1])/30)
+    try:
+        maxpage = ceil(int(soup.select("#box_mainproducts > div.boxhead > .category-name")[0].text.strip().split()[-1])/30)
+    except IndexError:
+        return []
 
     productslist.extend(fourbiker_products_on_page(soup , search))
 

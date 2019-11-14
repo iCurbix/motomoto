@@ -5,6 +5,12 @@ from src.search.resources.item import SearchItems
 app = Flask(__name__)
 api = Api(app)
 
+
+@app.route('/favicon.ico')
+def favicon():
+    return None , 404
+
+
 api.add_resource(SearchItems , '/<string:search>')
 
 if __name__ == '__main__':
