@@ -21,15 +21,21 @@ def xlmoto(search):
                       },
                       json={
                         "DirectResults_FromIndex": 0,
-                        "DirectResults_ToIndex": 9999,
+                        "DirectResults_ToIndex": 999,
                         "FilterOnVehicles": [],
                         "QueryString": search,
                         "RecommendedResults_FromIndex": 0,
-                        "RecommendedResults_ToIndex": 9999,
+                        "RecommendedResults_ToIndex": 999,
                         "Faceting.Brands": [],
                         "Faceting.Category_3": [],
                         "Faceting.Colors": [],
                         "Faceting.Sizes": []})
+
+    if r.status_code != 200:
+        return {'products': productlist}
+
+    if not r.json()['Data']['MakesSense']:
+        return {'products': productlist}
 
     ids = [prod['Key']['Attributes']['Id'][0] for prod in r.json()['Data']['DirectResults']]
 
