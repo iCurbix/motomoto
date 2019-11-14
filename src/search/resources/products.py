@@ -1,11 +1,11 @@
 from flask_restful import Resource
-from src.utils.FourbikerScrapper import fourbiker
-from src.utils.Xlmoto import xlmoto
+from src.utils import Shops
 
 
 class SearchItems(Resource):
     def get(self , search):
-        return {
-            '4biker': fourbiker(search),
-            'xlmoto': xlmoto(search)
-        }
+        result = {}
+        shops = [shop for shop in dir(Shops) if shop[0] != '_']
+        for shop in shops:
+            result[shop] = getattr(Shops , shop)(search)
+        return result

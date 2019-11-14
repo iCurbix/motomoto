@@ -11,7 +11,7 @@ def splitids(ids):
     for i in range(0 , len(ids) , 50):
         yield ids[i : i + 50]
 
-
+@staticmethod
 def xlmoto(search):
     productlist = []
     r = requests.post('https://xlmoto-pl.54proxy.com/search' ,
