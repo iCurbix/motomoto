@@ -1,9 +1,15 @@
 from flask import Flask
 from flask_restful import Api
-from src.search.resources.item import SearchItems
+from src.search.resources.products import SearchItems
 
 app = Flask(__name__)
 api = Api(app)
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return None , 404
+
 
 api.add_resource(SearchItems , '/<string:search>')
 
