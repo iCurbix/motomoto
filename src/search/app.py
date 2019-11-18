@@ -8,10 +8,10 @@ api = Api(app)
 
 @app.route('/favicon.ico')
 def favicon():
-    return None , 404
+    return None, 404
 
 
 api.add_resource(SearchItems , '/<string:search>')
 
 if __name__ == '__main__':
-    app.run(port=5000 , debug=True)
+    app.run(port=5000, debug=True)

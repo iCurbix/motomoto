@@ -68,5 +68,7 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 *.log
-venv/
+venv*/
 __pycache__
+keys/
+data.db
