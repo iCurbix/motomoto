@@ -51,6 +51,5 @@ class ValidateToken(Resource):
         try:
             jwt.decode(token, key, audience=audience, issuer='https://motomotoorsthlikethat.com', algorithm='RS512')
         except:
-            print("kupa!!")
             return {'is_valid': False}, 400
         return {'is_valid': True}, 201
