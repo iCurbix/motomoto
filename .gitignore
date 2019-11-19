@@ -72,3 +72,4 @@ venv*/
 __pycache__
 keys/
 data.db
+inspectionProfiles/

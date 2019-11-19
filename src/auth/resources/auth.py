@@ -35,7 +35,22 @@ class Login(Resource):
             }
             token = jwt.encode(token, key, algorithm='RS512')
             return {
-                'access-token': token.decode('utf8')
-            }, 201
+                       'access-token': token.decode('utf8')
+                   }, 201
         else:
             return {'message': 'username or password incorrect'}, 401
+
+
+class ValidateToken(Resource):
+    def post(self):
+        key = current_app.config['PUBLIC_KEY']
+        token = request.headers.get('JWT-token')
+        audience = request.headers.get('audience')
+        if token is None or audience is None:
+            return {'is_valid': False}, 400
+        try:
+            jwt.decode(token, key, audience=audience, issuer='https://motomotoorsthlikethat.com', algorithm='RS512')
+        except:
+            print("kupa!!")
+            return {'is_valid': False}, 400
+        return {'is_valid': True}, 201

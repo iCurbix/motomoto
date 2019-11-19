@@ -1,0 +1,24 @@
+import requests
+from functools import wraps
+from flask_restful import request
+
+
+def authrequired(func):
+    @wraps(func)
+    def checkjwt(*args, **kwargs):
+        token = request.headers.get('JWT-token')
+        audience = request.headers.get('audience')
+        if token is None or audience is None:
+            return {'message': 'did not receieve token'}, 401
+        try:
+            r = requests.post('http://127.0.0.1:5001/validate',
+                              headers={
+                                  'JWT-Token': token,
+                                  'audience': audience,
+                              })
+        except requests.exceptions.RequestException as e:
+            return {'message': e}, 401
+        if not r.json().get('is_valid', False):
+            return {'message': 'invalid token'}, 401
+        return func(*args, **kwargs)
+    return checkjwt

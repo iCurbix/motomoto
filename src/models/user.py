@@ -21,6 +21,13 @@ class User(db.Model):
             return user
         return None
 
+    @classmethod
+    def get_by_id(cls, _id):
+        user = cls.query.filter_by(id=_id).first()
+        if user:
+            return user
+        return None
+
     def add_user(self):
         db.session.add(self)
         db.session.commit()

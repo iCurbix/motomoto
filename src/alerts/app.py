@@ -1,15 +1,13 @@
 from flask import Flask
 from flask_restful import Api
-from src.auth.config import Config
-from src.auth.resources.auth import Register, Login, ValidateToken
+from src.alerts.config import Config
+from src.alerts.resources.alerts import Alert
 
 app = Flask(__name__)
 app.config.from_object(Config)
 api = Api(app)
 
-api.add_resource(Register, '/register')
-api.add_resource(Login, '/login')
-api.add_resource(ValidateToken, '/validate')
+api.add_resource(Alert, '/alert')
 
 if __name__ == '__main__':
     from src.db import db
@@ -17,4 +15,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         db.session.commit()
-    app.run(port=5001, debug=True)
+    app.run(port=5002, debug=True)

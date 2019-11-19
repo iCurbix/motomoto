@@ -1,5 +1,6 @@
 import os
 
+
 class Config(object):
     priv_key_path = os.environ['PRIVKEY']
     pub_key_path = os.environ['PUBKEY']

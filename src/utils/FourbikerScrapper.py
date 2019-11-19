@@ -20,7 +20,7 @@ def fourbiker_products_on_page(soup , search):
         })
     return productlist
 
-@staticmethod
+
 def fourbiker(search):
     productslist = []
     i = 1
