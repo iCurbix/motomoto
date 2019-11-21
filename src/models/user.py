@@ -1,4 +1,6 @@
+import datetime
 from src.db import db
+from src.models.alert import AlertModel
 
 
 class User(db.Model):
@@ -7,12 +9,14 @@ class User(db.Model):
     username = db.Column(db.String(100))
     password = db.Column(db.String(100))
     email = db.Column(db.String(100))
+    alerts = db.relationship('AlertModel')
+    registerdate = db.Column(db.DateTime, default=datetime.datetime.utcnow())
 
     def __init__(self, username, password, email):
         self.username = username
         self.password = password
         self.email = email
-        self.token = None
+        self.registerdate = datetime.datetime.utcnow()
 
     @classmethod
     def get_by_username(cls, username):
@@ -33,8 +37,7 @@ class User(db.Model):
         db.session.commit()
 
     def delete_user(self):
+        for alert in self.alerts:
+            alert.delete_alert()
         db.session.delete(self)
         db.session.commit()
-
-    def set_token(self, token):
-        self.token = token

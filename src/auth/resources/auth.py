@@ -1,13 +1,14 @@
 import jwt
-import time
+import datetime
 from flask import current_app
 from flask_restful import Resource, request
 from src.models.user import User
 from werkzeug.security import generate_password_hash, check_password_hash
+from src.utils.checkauth import authrequired
 
 
 class Register(Resource):
-    def post(self):
+    def put(self):
         data = request.get_json()
         if None in [data.get('username'), data.get('username'), data.get('email')]:
             return {'message': 'data not correct'}, 400
@@ -26,7 +27,7 @@ class Login(Resource):
         user = User.get_by_username(data['username'])
         if user and check_password_hash(user.password, data['password']):
             key = current_app.config['PRIVATE_KEY']
-            now = int(time.time())
+            now = datetime.datetime.utcnow().timestamp()
             token = {
                 'iss': 'https://motomotoorsthlikethat.com',
                 'aud': data['username'],
@@ -49,8 +50,18 @@ class ValidateToken(Resource):
         if token is None or audience is None:
             return {'is_valid': False}, 400
         try:
-            jwt.decode(token, key, audience=audience, issuer='https://motomotoorsthlikethat.com', algorithm='RS512')
-        except:
-            print("kupa!!")
+            decoded = jwt.decode(token, key, audience=audience, issuer='https://motomotoorsthlikethat.com', algorithm='RS512')
+        except (jwt.ExpiredSignatureError, jwt.InvalidAlgorithmError, jwt.InvalidAudienceError, jwt.InvalidIssuerError,
+                jwt.InvalidTokenError, jwt.InvalidSignatureError, jwt.InvalidIssuedAtError):
+            return {'is_valid': False}, 400
+        if decoded['iat'] < User.get_by_username(audience).registerdate.timestamp():
             return {'is_valid': False}, 400
         return {'is_valid': True}, 201
+
+
+class Delete(Resource):
+    @authrequired
+    def delete(self):
+        user = User.get_by_username(request.headers.get('audience'))
+        user.delete_user()
+        return {'message': 'user deleted successfully'}, 201

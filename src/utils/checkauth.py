@@ -1,6 +1,7 @@
 import requests
 from functools import wraps
 from flask_restful import request
+from src.models.user import User
 
 
 def authrequired(func):
@@ -8,6 +9,8 @@ def authrequired(func):
     def checkjwt(*args, **kwargs):
         token = request.headers.get('JWT-token')
         audience = request.headers.get('audience')
+        if User.get_by_username(audience) is None:
+            return {'message': 'user does not exist'}, 401
         if token is None or audience is None:
             return {'message': 'did not receieve token'}, 401
         try:

@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from src.auth.config import Config
-from src.auth.resources.auth import Register, Login, ValidateToken
+from src.auth.resources.auth import Register, Login, ValidateToken, Delete
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -10,6 +10,7 @@ api = Api(app)
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
 api.add_resource(ValidateToken, '/validate')
+api.add_resource(Delete, '/delete')
 
 if __name__ == '__main__':
     from src.db import db

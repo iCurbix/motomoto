@@ -11,7 +11,7 @@ def favicon():
     return None, 404
 
 
-api.add_resource(SearchItems , '/<string:search>')
+api.add_resource(SearchItems, '/<string:search>')
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
