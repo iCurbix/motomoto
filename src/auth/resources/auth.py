@@ -5,6 +5,7 @@ from flask_restful import Resource, request
 from src.models.user import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from src.utils.checkauth import authrequired
+from src.redisdb import rd
 
 
 class Register(Resource):
@@ -49,6 +50,8 @@ class ValidateToken(Resource):
         audience = request.headers.get('audience')
         if token is None or audience is None:
             return {'is_valid': False}, 400
+        if rd.get(token) is not None:
+            return {'is_valid': False}, 400
         try:
             decoded = jwt.decode(token, key, audience=audience, issuer='https://motomotoorsthlikethat.com', algorithm='RS512')
         except (jwt.ExpiredSignatureError, jwt.InvalidAlgorithmError, jwt.InvalidAudienceError, jwt.InvalidIssuerError,
@@ -65,3 +68,12 @@ class Delete(Resource):
         user = User.get_by_username(request.headers.get('audience'))
         user.delete_user()
         return {'message': 'user deleted successfully'}, 201
+
+
+class RevokeToken(Resource):
+    @authrequired
+    def post(self):
+        token = request.headers.get('JWT-token')
+        rd.set(token, '1', ex=60*60*48)
+        rd.bgsave()
+        return {'message': 'token revoked successfully'}, 201
