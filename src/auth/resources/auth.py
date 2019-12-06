@@ -1,7 +1,8 @@
 import jwt
 import datetime
-from flask import current_app
-from flask_restful import Resource, request
+import requests
+from flask import current_app, request
+from flask_restful import Resource
 from src.models.user import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from src.utils.checkauth import authrequired
@@ -13,11 +14,16 @@ class Register(Resource):
         data = request.get_json()
         if None in [data.get('username'), data.get('username'), data.get('email')]:
             return {'message': 'data not correct'}, 400
-        if User.get_by_username(data['username']) is None:
-            User(data['username'], generate_password_hash(data['password']), data['email']).add_user()
-            return {'message': 'user registered successfully'}, 201
-        else:
+        if User.get_by_username(data['username']) is not None:
             return {'message': 'user with this username already exists'}, 400
+        if User.get_by_email(data['email']) is not None:
+            return {'message': 'user with this email already exists'}, 400
+        User(data['username'], generate_password_hash(data['password']), data['email']).add_user()
+        r = requests.post('http://127.0.0.1:5005/registermail',
+                          headers={
+                              'username': data['username']
+                          })
+        return {'message': 'user registered successfully'}, 201
 
 
 class Login(Resource):

@@ -26,6 +26,13 @@ class User(db.Model):
         return None
 
     @classmethod
+    def get_by_email(cls, email):
+        user = cls.query.filter_by(email=email).first()
+        if user:
+            return user
+        return None
+
+    @classmethod
     def get_by_id(cls, _id):
         user = cls.query.filter_by(id=_id).first()
         if user:

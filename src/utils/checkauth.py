@@ -10,7 +10,7 @@ def authrequired(func):
         token = request.headers.get('JWT-token')
         audience = request.headers.get('audience')
         if User.get_by_username(audience) is None:
-            return {'message': 'user does not exist'}, 401
+            return {'message': 'user does not exist'}, 400
         if token is None or audience is None:
             return {'message': 'did not receieve token'}, 401
         try:
