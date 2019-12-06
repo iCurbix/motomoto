@@ -18,7 +18,8 @@ class Alert(Resource):
         for alertdata in data.get('alerts'):
             if None in [user.id, alertdata.get('product'), alertdata.get('price')]:
                 return {'message': 'data not correct'}, 400
-            alert = AlertModel(user.id, alertdata.get('product'), alertdata.get('price'))
+            alert = AlertModel(user.id, alertdata.get('product'), alertdata.get('price'),
+                               alertdata.get('currency') or 'PLN')
             alert.add_alert()
         return {'message': 'alerts added succesfully'}, 201
 
@@ -49,14 +50,15 @@ class Alert(Resource):
             return {'message': 'data not correct'}, 400
         user = User.get_by_username(username)
         for alertdict in data.get('alerts'):
-            if None in [alertdict.get('id'), alertdict.get('product'), alertdict.get('price')]:
+            if None in [alertdict.get('id'), alertdict.get('product'), alertdict.get('price'),
+                        alertdict.get('currency')]:
                 return {'message': 'data not correct'}, 400
             alert = AlertModel.get_alert_by_id(alertdict['id'])
             if alert is None:
                 return {'message': 'data not correct'}, 400
             if user.id != alert.user:
                 return {'message': "you cannot change alerts that aren't yours"}, 401
-            alert.update_info(alertdict['product'], alertdict['price'])
+            alert.update_info(alertdict['product'], alertdict['price'], alertdict.get('currency'))
         return {'message': 'updated successfully'}
 
     @authrequired

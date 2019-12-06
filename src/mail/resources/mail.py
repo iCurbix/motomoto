@@ -37,5 +37,22 @@ class RegisterMail(Resource):
             return {'message': 'data not correct'}, 400
         text = render_template('mail/register_mail_template.txt', user=user)
         html = render_template('mail/register_mail_template.html', user=user)
-        sendmail(senderemail, user.email, 'Welcome at motomoto!', text, html)
+        sendmail(senderemail, user.email, 'Welcome to motomoto!', text, html)
         return {'message': 'register mail sent successfully'}
+
+
+class AlertMail(Resource):
+    def post(self):
+        headers = request.headers
+        data = request.get_json()
+        if data.get('products') is None:
+            return {'message': 'data not correct'}, 400
+        if headers.get('username') is None:
+            return {'message': 'data not correct'}, 400
+        user = User.get_by_username(headers.get('username'))
+        if user is None:
+            return {'message': 'data not correct'}, 400
+        text = render_template('mail/alert_mail_template.txt', user=user, products=data.get('products'))
+        html = render_template('mail/alert_mail_template.html', user=user, products=data.get('products'))
+        sendmail(senderemail, user.email, 'Price alerts from motomoto', text, html)
+        return {'message': 'alert mail sent successfully'}

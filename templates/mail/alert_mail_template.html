@@ -1,0 +1,16 @@
+<div>
+    Hello, {{ user.username }}!
+    {% for product in products %}
+    <div class="product" style="margin-top: 5pt; padding: 3pt 0 3pt 0">
+       <p>{{ product['name'] }} is now for {{ product['price'] }}{{ product['currency'] }}!
+        You can find it here:
+        <a href= "{{ product['link'] }}">
+            {{ product['link'] }}
+        </a>
+       </p>
+        <a href= "{{ product['link'] }}">
+            <img src="{{ product['img'] }}" alt="{{ product['name'] }}" style="max-width: 50%" />
+        </a>
+    </div>
+    {% endfor %}
+</div>

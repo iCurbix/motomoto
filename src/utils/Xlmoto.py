@@ -52,6 +52,7 @@ def xlmoto(search):
                 "img": img,
                 "name": name,
                 "price": price,
-                "link": f"https://www.xlmoto.pl/products/{link}"
+                "link": f"https://www.xlmoto.pl/products/{link}",
+                "currency": 'PLN'
             })
     return {'products': productlist}

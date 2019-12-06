@@ -16,7 +16,8 @@ def fourbiker_products_on_page(soup , search):
             "img": f"https://sklep4biker.pl{img}",
             "name": name,
             "price": price,
-            "link": f"https://sklep4biker.pl{link}"
+            "link": f"https://sklep4biker.pl{link}",
+            "currency": "PLN",
         })
     return productlist
 

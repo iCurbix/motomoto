@@ -1,0 +1,7 @@
+Hello, {{ user.username }}!
+{% for product in products %}
+
+{{ product['name'] }} is now for {{ product['price'] }}{{ product['currency'] }}!
+You can find it here:
+{{ product['link'] }}
+{% endfor %}

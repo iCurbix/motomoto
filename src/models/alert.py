@@ -7,12 +7,14 @@ class AlertModel(db.Model):
     user = db.Column(db.Integer, db.ForeignKey('users.id'))
     product = db.Column(db.String(255))
     price = db.Column(db.Float(precision=2))
+    currency = db.Column(db.String(3))
     active = db.Column(db.Boolean, default=True)
 
-    def __init__(self, user_id, product, price):
+    def __init__(self, user_id, product, price, currency):
         self.user = user_id
         self.product = product
         self.price = price
+        self.currency = currency
         self.active = True
 
     def to_dict(self):
@@ -21,6 +23,7 @@ class AlertModel(db.Model):
             'user': self.user,
             'product': self.product,
             'price': self.price,
+            'currency': self.currency,
             'active': self.active,
         }
 
@@ -48,9 +51,10 @@ class AlertModel(db.Model):
     def list_to_dict(cls, alertlist):
         return [alert.to_dict() for alert in alertlist]
 
-    def update_info(self, product, price):
+    def update_info(self, product, price, currency):
         self.product = product
         self.price = price
+        self.currency = currency
         db.session.commit()
 
     def change_active(self):
