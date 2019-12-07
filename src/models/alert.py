@@ -48,6 +48,16 @@ class AlertModel(db.Model):
         return None
 
     @classmethod
+    def get_all_alerts(cls):
+        alerts = cls.query.all()
+        return alerts
+
+    @classmethod
+    def get_all_active_alerts(cls):
+        alerts = cls.query.filter_by(active=True).all()
+        return alerts
+
+    @classmethod
     def list_to_dict(cls, alertlist):
         return [alert.to_dict() for alert in alertlist]
 

@@ -38,7 +38,7 @@ class RegisterMail(Resource):
         text = render_template('mail/register_mail_template.txt', user=user)
         html = render_template('mail/register_mail_template.html', user=user)
         sendmail(senderemail, user.email, 'Welcome to motomoto!', text, html)
-        return {'message': 'register mail sent successfully'}
+        return {'message': 'register mail sent successfully'}, 201
 
 
 class AlertMail(Resource):
@@ -55,4 +55,4 @@ class AlertMail(Resource):
         text = render_template('mail/alert_mail_template.txt', user=user, products=data.get('products'))
         html = render_template('mail/alert_mail_template.html', user=user, products=data.get('products'))
         sendmail(senderemail, user.email, 'Price alerts from motomoto', text, html)
-        return {'message': 'alert mail sent successfully'}
+        return {'message': 'alert mail sent successfully'}, 201
