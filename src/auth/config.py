@@ -5,7 +5,7 @@ pub_key_path = os.environ['PUBKEY']
 
 
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../data.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DBURI') or 'sqlite:///../data.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PROPAGATE_EXCEPTIONS = True
     with open(priv_key_path) as f:

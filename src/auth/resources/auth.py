@@ -19,11 +19,13 @@ class Register(Resource):
         if User.get_by_email(data['email']) is not None:
             return {'message': 'user with this email already exists'}, 400
         User(data['username'], generate_password_hash(data['password']), data['email']).add_user()
-        r = requests.post('http://127.0.0.1:5005/registermail',
-                          headers={
-                              'username': data['username']
-                          })
-        return {'message': 'user registered successfully'}, 201
+        try:
+            r = requests.post('http://127.0.0.1:5005/registermail',
+                              headers={
+                                  'username': data['username']
+                              })
+        finally:
+            return {'message': 'user registered successfully'}, 201
 
 
 class Login(Resource):
