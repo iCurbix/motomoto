@@ -10,6 +10,8 @@ RUN venv/bin/pip install --upgrade pip
 RUN venv/bin/pip install -r requirements.txt
 RUN venv/bin/pip install gunicorn
 
+RUN venv/bin/pip install flask_cors
+
 RUN mkdir src
 COPY boot.sh boot.sh
 COPY src/__init__.py src/__init__.py

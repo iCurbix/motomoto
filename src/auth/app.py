@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from flask_migrate import Migrate
+from flask_cors import CORS
 from src.config import Config
 from src.auth.resources.auth import Register, Login, ValidateToken, Delete, RevokeToken
 from src.db import db
@@ -9,6 +10,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 api = Api(app)
 migrate = Migrate(app, db)
+CORS(app)
 
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
