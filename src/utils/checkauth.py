@@ -1,6 +1,6 @@
 import requests
 from functools import wraps
-from flask_restful import request
+from flask import request
 from src.models.user import User
 
 
@@ -14,7 +14,7 @@ def authrequired(func):
         if token is None or audience is None:
             return {'message': 'did not receieve token'}, 401
         try:
-            r = requests.post('http://127.0.0.1:5001/validate',
+            r = requests.post('http://auth:5001/validate',
                               headers={
                                   'JWT-Token': token,
                                   'audience': audience,

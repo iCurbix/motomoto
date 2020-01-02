@@ -74,3 +74,9 @@ keys/
 data.db
 inspectionProfiles/
 vol/
+*.env
+*.sh
+!boot.sh
+.dockerignore.*
+migrations/
+/src/frontend/.idea/

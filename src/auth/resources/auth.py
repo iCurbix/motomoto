@@ -20,7 +20,7 @@ class Register(Resource):
             return {'message': 'user with this email already exists'}, 400
         User(data['username'], generate_password_hash(data['password']), data['email']).add_user()
         try:
-            r = requests.post('http://127.0.0.1:5005/registermail',
+            r = requests.post('http://mail:5005/registermail',
                               headers={
                                   'username': data['username']
                               })

@@ -1,5 +1,6 @@
 from flask import Flask
-from src.notifications.config import Config
+from flask_migrate import Migrate
+from src.config import Config
 from src.models.alert import AlertModel
 from src.models.user import User
 import schedule
@@ -8,6 +9,7 @@ import requests
 import itertools
 import logging
 import sys
+from src.db import db
 
 
 log = logging.getLogger(__name__)
@@ -19,6 +21,12 @@ log.setLevel(logging.INFO)
 
 app = Flask(__name__)
 app.config.from_object(Config)
+migrate = Migrate(app, db)
+
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+    db.session.commit()
 
 
 def job():
@@ -33,7 +41,7 @@ def job():
             alerts_to_deactivate = []
 
             for alert in alerts:
-                r = requests.get(f'http://127.0.0.1:5000/{alert["product"]}')
+                r = requests.get(f'http://search:5000/{alert["product"]}')
                 if r.status_code != 201:
                     continue
                 productnum = len(productlist)
@@ -48,7 +56,7 @@ def job():
                 continue
             user = User.get_by_id(userid)
             log.info(f'Sending notifications to {user.username}')
-            r2 = requests.post('http://127.0.0.1:5005/alertmail',
+            r2 = requests.post('http://mail:5005/alertmail',
                                headers={
                                    'Content-Type': 'application/json',
                                    'username': user.username
@@ -66,11 +74,6 @@ def job():
 schedule.every().hour.do(job)
 
 if __name__ == '__main__':
-    from src.db import db
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
-        db.session.commit()
     log.info('Starting app')
     while True:
         schedule.run_pending()

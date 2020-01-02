@@ -1,0 +1,82 @@
+version: '3.7'
+services:
+  search:
+    build:
+      context: .
+      dockerfile: src/search/Dockerfile
+    container_name: search
+    restart: always
+    env_file:
+      - src/search/vars.env
+    ports:
+      - '5000:5000'
+  auth:
+    build:
+      context: .
+      dockerfile: src/auth/Dockerfile
+    container_name: auth
+    restart: always
+    env_file:
+      - src/auth/vars.env
+    ports:
+      - '5001:5001'
+    depends_on:
+      - redis
+      - postgres
+#    secrets:
+#      - privkey
+#      - pubkey
+  alerts:
+    build:
+      context: .
+      dockerfile: src/alerts/Dockerfile
+    container_name: alerts
+    restart: always
+    env_file:
+      - src/alerts/vars.env
+    ports:
+      - '5002:5002'
+    depends_on:
+      - auth
+      - postgres
+  mail:
+    build:
+      context: .
+      dockerfile: src/mail/Dockerfile
+    container_name: mail
+    restart: always
+    env_file:
+      - src/mail/vars.env
+    depends_on:
+      - auth
+      - alerts
+      - postgres
+  notifications:
+    build:
+      context: .
+      dockerfile: src/notifications/Dockerfile
+    container_name: notifications
+    restart: always
+    env_file:
+      - src/notifications/vars.env
+    depends_on:
+      - alerts
+      - mail
+      - postgres
+  redis:
+    container_name: redis
+    image: redis:rc-alpine
+    volumes:
+      - /src/redis/volume:/data/
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    env_file:
+      - src/postgres/vars.env
+    volumes:
+      - /src/postgres/volume:/data/
+#secrets:
+#  privkey:
+#    file: ./src/auth/keys/privkey.pem
+#  pubkey:
+#    file: ./src/auth/keys/pubkey.pem
